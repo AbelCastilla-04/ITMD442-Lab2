@@ -5,7 +5,7 @@ export interface Todo {
 }
 
 export class TodoList {
-    private todo: Todo[] = [];
+  private todos: Todo[] = [];
 
   addTodo(text: string): Todo {
     const todo: Todo = {
@@ -18,11 +18,11 @@ export class TodoList {
   }
 
   removeTodo(id: string): void {
-    this.todos = this.todos.filter((todo) => todo.id !== id);
+    this.todos = this.todos.filter((todo: Todo) => todo.id !== id);
   }
 
   toggleTodo(id: string): void {
-    this.todos = this.todos.map((todo) =>
+    this.todos = this.todos.map((todo: Todo) =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     );
   }

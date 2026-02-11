@@ -1,61 +1,79 @@
 // TODO: Handle possible null returns from getElementById
-import { TodoList } from './TodoList';
-const app = document.getElementById('app');
-const todoInput = document.getElementById('todoInput');
-const addTodoButton = document.getElementById('addTodo');
-const todoListElement = document.getElementById('todoList');
-const todoCount = document.getElementById('todoCount');
+import { TodoList, type Todo } from './TodoList';
+function getRequiredElement<T extends HTMLElement>(
+  id: string,
+  guard: (el: HTMLElement) => el is T
+): T {
+  const el = document.getElementById(id);
+  if (!el) throw new Error(`Required element #${id} was not found`);
+
+  if (!guard(el)) {
+    throw new Error(`Element #${id} is not the expected element type`);
+  }
+  return el;
+}
+
+const todoInput = getRequiredElement(
+  "todoInput",
+  (el): el is HTMLInputElement => el instanceof HTMLInputElement
+);
+
+const addTodoButton = getRequiredElement(
+  "addTodo",
+  (el): el is HTMLButtonElement => el instanceof HTMLButtonElement
+);
+
+const todoListElement = getRequiredElement(
+  "todoList",
+  (el): el is HTMLUListElement => el instanceof HTMLUListElement
+);
+
+const todoCount = getRequiredElement(
+  "todoCount",
+  (el): el is HTMLDivElement => el instanceof HTMLDivElement
+);
 
 const todoApp = new TodoList();
 
-function renderTodos() {
-    todoListElement.innerHTML = '';
-    // TODO: Add type for the todo parameter
-    todoApp.listTodos().forEach(todo => {
-        const li = document.createElement('li');
-        li.textContent = todo.text;
-        li.dataset.tid = todo.id;
-        li.style.textDecoration = todo.completed ? 'line-through' : 'none';
-        
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        // TODO: Add type for the event parameter
-        deleteButton.onclick = (e) => {
-            console.log('Delete button clicked:', e.target);
-            const listItem = e.target.parentElement;
-            const todoId = listItem.dataset.tid;
-            todoApp.removeTodo(todoId);
-            renderTodos();
-        };
+function renderTodos(): void {
+  todoListElement.innerHTML = "";
 
-        const toggleButton = document.createElement('button');
-        toggleButton.textContent = 'Toggle';
-        // TODO: This event parameter is unused - you can remove it or add proper typing
-        toggleButton.onclick = (e) => {
-            todoApp.toggleTodo(todo.id);
-            renderTodos();
-        };
+  todoApp.listTodos().forEach((todo: Todo) => {
+    const li = document.createElement("li");
+    li.textContent = todo.text;
+    li.style.textDecoration = todo.completed ? "line-through" : "none";
 
-        li.appendChild(toggleButton);
-        li.appendChild(deleteButton);
-        todoListElement.appendChild(li);
+    const toggleButton = document.createElement("button");
+    toggleButton.textContent = "Toggle";
+    toggleButton.addEventListener("click", () => {
+      todoApp.toggleTodo(todo.id);
+      renderTodos();
     });
 
-    // Update todo count display
-    // TODO: todoCount might be null, handle this case
-    const count = todoApp.getTodoCount();
-    todoCount.textContent = `Total todos: ${count}`;
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => {
+      todoApp.removeTodo(todo.id);
+      renderTodos();
+    });
+
+    li.appendChild(toggleButton);
+    li.appendChild(deleteButton);
+    todoListElement.appendChild(li);
+  });
+
+  todoCount.textContent = `Total todos: ${todoApp.getTodoCount()}`;
 }
 
-// TODO: Add type for the event parameter
-addTodoButton.addEventListener('click', (e) => {
-    console.log('Add button clicked:', e.currentTarget);
-    // TODO: todoInput might be null, handle this case
-    if (todoInput.value.trim()) {
-        todoApp.addTodo(todoInput.value);
-        todoInput.value = '';
-        renderTodos();
-    }
+addTodoButton.addEventListener("click", (e: MouseEvent) => {
+  console.log("Add button clicked:", e.currentTarget);
+
+  const text = todoInput.value.trim();
+  if (!text) return;
+
+  todoApp.addTodo(text);
+  todoInput.value = "";
+  renderTodos();
 });
 
 renderTodos();
