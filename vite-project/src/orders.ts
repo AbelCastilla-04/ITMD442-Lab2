@@ -1,37 +1,25 @@
 // TODO: Handle possible null returns from getElementById
-import { TodoList, type Todo } from './TodoList';
-function getRequiredElement<T extends HTMLElement>(
-  id: string,
-  guard: (el: HTMLElement) => el is T
-): T {
-  const el = document.getElementById(id);
-  if (!el) throw new Error(`Required element #${id} was not found`);
+import { TodoList, type Todo } from "./TodoList";
 
-  if (!guard(el)) {
-    throw new Error(`Element #${id} is not the expected element type`);
-  }
-  return el;
+const todoInput = document.getElementById("todoInput");
+if (!(todoInput instanceof HTMLInputElement)) {
+  throw new Error("todoInput must be an input element");
 }
 
-const todoInput = getRequiredElement(
-  "todoInput",
-  (el): el is HTMLInputElement => el instanceof HTMLInputElement
-);
+const addTodoButton = document.getElementById("addTodo");
+if (!(addTodoButton instanceof HTMLButtonElement)) {
+  throw new Error("addTodo must be a button element");
+}
 
-const addTodoButton = getRequiredElement(
-  "addTodo",
-  (el): el is HTMLButtonElement => el instanceof HTMLButtonElement
-);
+const todoListElement = document.getElementById("todoList");
+if (!(todoListElement instanceof HTMLUListElement)) {
+  throw new Error("todoList must be a <ul> element");
+}
 
-const todoListElement = getRequiredElement(
-  "todoList",
-  (el): el is HTMLUListElement => el instanceof HTMLUListElement
-);
-
-const todoCount = getRequiredElement(
-  "todoCount",
-  (el): el is HTMLDivElement => el instanceof HTMLDivElement
-);
+const todoCount = document.getElementById("todoCount");
+if (!(todoCount instanceof HTMLDivElement)) {
+  throw new Error("todoCount must be a <div> element");
+}
 
 const todoApp = new TodoList();
 
@@ -65,9 +53,7 @@ function renderTodos(): void {
   todoCount.textContent = `Total todos: ${todoApp.getTodoCount()}`;
 }
 
-addTodoButton.addEventListener("click", (e: MouseEvent) => {
-  console.log("Add button clicked:", e.currentTarget);
-
+addTodoButton.addEventListener("click", () => {
   const text = todoInput.value.trim();
   if (!text) return;
 
