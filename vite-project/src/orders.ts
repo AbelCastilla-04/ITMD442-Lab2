@@ -1,25 +1,37 @@
 // TODO: Handle possible null returns from getElementById
 import { TodoList, type Todo } from "./TodoList";
 
-const todoInput = document.getElementById("todoInput");
-if (!(todoInput instanceof HTMLInputElement)) {
-  throw new Error("todoInput must be an input element");
-}
+const todoInput = (() => {
+  const el = document.getElementById("todoInput");
+  if (!(el instanceof HTMLInputElement)) {
+    throw new Error("todoInput must be an input element");
+  }
+  return el;
+})();
 
-const addTodoButton = document.getElementById("addTodo");
-if (!(addTodoButton instanceof HTMLButtonElement)) {
-  throw new Error("addTodo must be a button element");
-}
+const addTodoButton = (() => {
+  const el = document.getElementById("addTodo");
+  if (!(el instanceof HTMLButtonElement)) {
+    throw new Error("addTodo must be a button element");
+  }
+  return el;
+})();
 
-const todoListElement = document.getElementById("todoList");
-if (!(todoListElement instanceof HTMLUListElement)) {
-  throw new Error("todoList must be a <ul> element");
-}
+const todoListElement = (() => {
+  const el = document.getElementById("todoList");
+  if (!(el instanceof HTMLUListElement)) {
+    throw new Error("todoList must be a <ul> element");
+  }
+  return el;
+})();
 
-const todoCount = document.getElementById("todoCount");
-if (!(todoCount instanceof HTMLDivElement)) {
-  throw new Error("todoCount must be a <div> element");
-}
+const todoCount = (() => {
+  const el = document.getElementById("todoCount");
+  if (!(el instanceof HTMLDivElement)) {
+    throw new Error("todoCount must be a <div> element");
+  }
+  return el;
+})();
 
 const todoApp = new TodoList();
 
