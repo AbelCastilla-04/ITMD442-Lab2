@@ -1,3 +1,9 @@
+export interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
 class TodoList {
     constructor() {
         // TODO: What type should this array hold?
