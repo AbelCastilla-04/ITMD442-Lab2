@@ -1,4 +1,5 @@
 // TODO: Handle possible null returns from getElementById
+import { TodoList } from './TodoList';
 const app = document.getElementById('app');
 const todoInput = document.getElementById('todoInput');
 const addTodoButton = document.getElementById('addTodo');
